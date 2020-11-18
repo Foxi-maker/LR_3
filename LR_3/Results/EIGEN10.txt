@@ -1,0 +1,16 @@
+eps = 0.01
+4
+-98.6    8.87     -9.2     2.79     
+8.87     181.8    -7.04    -4.06    
+-9.2     -7.04    -119.8   -5.63    
+2.79     -4.06    -5.63    105.8    
+
+QR
+Number of iterations: 137
+Eigenvalues: 182.45       -123.36      105.802      -95.6921     
+QR with shifts
+Number of iterations: 10
+Eigenvalues: 182.45       -95.6921     -123.36      105.802      
+QR (Hessenberg form)
+Number of iterations: 131
+Eigenvalues: 182.45       -123.36      105.802      -95.6921     
