@@ -6,6 +6,8 @@ class Matrix
 
 	//int operations = 0;
 	static std::fstream stream;
+
+	double* eigval;
 public:
 	Matrix();
 	Matrix(const std::string& f);
@@ -24,6 +26,9 @@ public:
 
 	void QR_EigVal(std::string = "SF");
 	void QR_EigVal_shifts(std::string = "SF");
+
+	void ReverseIterations();
+	void QRforSLAE(double**, double**, int);
 
 	void QRMethod(double**, double**,int);
 

@@ -11,4 +11,8 @@ namespace FUN
 	bool ConditionShifts(double**, int, std::string = "SF");
 
 	void HesForm(double**, int);
+
+	//void Difference(double**, int, double*, double*, int);
+
+	double NormInf(double*,int);
 }

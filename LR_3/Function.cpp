@@ -75,7 +75,7 @@ bool FUN::ConditionShifts(double** a, int n, std::string flag)
 	double max = 0;
 	if (flag == "HF")
 	{
-		max = a[n - 1][n - 2];
+		max = fabs(a[n - 1][n - 2]);
 	}
 	else
 	{
@@ -121,4 +121,17 @@ void FUN::HesForm(double ** a, int n)
 			}
 		}
 	}
+}
+
+double FUN::NormInf(double* x, int n)
+{
+	int indexMax = 0;
+	for (int index = 0; index < n; index++)
+	{
+		if (fabs(x[indexMax]) < fabs(x[index]))
+		{
+			indexMax = index;
+		}
+	}
+	return abs(x[indexMax]);
 }
