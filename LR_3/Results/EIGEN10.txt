@@ -7,14 +7,15 @@ eps = 0.01
 
 QR
 Number of iterations: 137
+Number of spins: 9590
 Eigenvalues: 182.45       -123.36      105.802      -95.6921     
 
 QR with shifts
 Number of iterations: 10
+Number of spins: 244
 Eigenvalues: 182.45       -95.6921     -123.36      105.802      
 
 Hessenberg decomposition:
-
 -98.6        13.0806      0            0            
 13.0806      36.3774      146.943      0            
 0            146.943      21.7547      -29.8693     
@@ -22,9 +23,11 @@ Hessenberg decomposition:
 
 QR (Hessenberg form)
 Number of iterations: 131
+Number of spins: 9176
 Eigenvalues: 182.45       -123.36      105.802      -95.6921     
 
 QR with shifts (Hessenberg form)
 Number of iterations: 48
+Number of spins: 1290
 Eigenvalues: 175.727      -120.844     -95.3505     109.668      
 

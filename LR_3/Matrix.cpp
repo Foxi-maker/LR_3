@@ -152,9 +152,9 @@ void Matrix::QR_EigVal(std::string flag)
 	{
 		OutToFile("QR (Hessenberg form)\n");
 		FUN::HesForm(R, matrixSize);
-		//
-		operations += ;
-		
+		//число вращений 
+		operations += matrixSize * matrixSize - 3 * matrixSize + 2;
+
 	}
 	else
 	{
@@ -169,8 +169,11 @@ void Matrix::QR_EigVal(std::string flag)
 
 		QRMethod(Q, R, matrixSize);
 
+		operations += matrixSize * matrixSize - 3 * matrixSize + 2;
+
 		//результат умножени€ записываетс€ в матрицу R
 		FUN::MultMatrix(R, Q, matrixSize);
+		operations += matrixSize * matrixSize * matrixSize;
 
 		//std::cout << "A:\n";
 		//FUN::Show(R, matrixSize);
@@ -183,6 +186,7 @@ void Matrix::QR_EigVal(std::string flag)
 
 	//¬ывод в файл числа итераций и собственных чисел
 	OutToFile("Number of iterations: ", numIter);
+	OutToFile("Number of spins + multiplications: ", operations);
 	OutToFile("Eigenvalues: ", eigval);
 	OutToFile("\n");
 
@@ -198,6 +202,7 @@ void Matrix::QR_EigVal(std::string flag)
 
 void Matrix::QR_EigVal_shifts(std::string flag)
 {
+	int operations = 0;
 	double sigma = A[matrixSize - 1][matrixSize - 1];
 
 	double** R = new double*[matrixSize];
@@ -214,8 +219,11 @@ void Matrix::QR_EigVal_shifts(std::string flag)
 
 	if (flag == "HF")
 	{
-		FUN::HesForm(R, matrixSize);
 		OutToFile("QR with shifts (Hessenberg form)\n");
+		FUN::HesForm(R, matrixSize);
+
+
+		operations += matrixSize * matrixSize - 3 * matrixSize + 2;
 	}
 	else
 	{
@@ -230,6 +238,7 @@ void Matrix::QR_EigVal_shifts(std::string flag)
 
 	while (dynamicSize > 1)
 	{
+		//TODO: изменить структуру
 		if (FUN::ConditionShifts(R, dynamicSize, flag))
 		{
 			for (int i = 0; i < dynamicSize; i++)
@@ -248,9 +257,11 @@ void Matrix::QR_EigVal_shifts(std::string flag)
 		else
 		{
 			QRMethod(Q, R, dynamicSize);
+			operations += dynamicSize * dynamicSize - 3 * dynamicSize + 2;
 
 			//результат умножени€ записываетс€ в матрицу R
 			FUN::MultMatrix(R, Q, dynamicSize);
+			operations += dynamicSize * dynamicSize * dynamicSize;
 		}
 		numIter++;
 	}
@@ -261,6 +272,7 @@ void Matrix::QR_EigVal_shifts(std::string flag)
 
 	//¬ывод в файл числа итераций и собственных чисел
 	OutToFile("Number of iterations: ", numIter);
+	OutToFile("Number of spins + multiplications: ", operations);
 	OutToFile("Eigenvalues: ", eigval);
 	OutToFile("\n");
 
@@ -304,6 +316,7 @@ void Matrix::QRMethod(double** Q, double** R, int n)
 
 			double temp;
 
+			//”множение на матрицу поворота
 			for (int index = 0; index < n; index++)
 			{
 				temp = Q[j][index];
@@ -311,7 +324,6 @@ void Matrix::QRMethod(double** Q, double** R, int n)
 				Q[i][index] = -s * temp + c * Q[i][index];
 			}
 
-			//”множение на матрицу поворота
 			for (int columnIterator = j; columnIterator < n; columnIterator++)
 			{
 				temp = R[j][columnIterator];
