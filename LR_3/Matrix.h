@@ -4,6 +4,7 @@ class Matrix
 	double** A;
 	int matrixSize;
 
+	//int operations = 0;
 	static std::fstream stream;
 public:
 	Matrix();
@@ -16,12 +17,13 @@ public:
 	void OutToFile()const;
 	void OutToFile(const std::string&) const;
 	void OutToFile(const std::string&, const double*)const;
+	void OutToFile(const std::string&, double**)const;
 	void OutToFile(const std::string&, double)const;
 
-	void QR_EigVal(std::string);
-	void QR_EigVal_shifts(std::string);
-	void QR_EigVal_HF();
-	void QR_EigVal_HF_shifts();
+	void HesFormOut()const;
+
+	void QR_EigVal(std::string = "SF");
+	void QR_EigVal_shifts(std::string = "SF");
 
 	void QRMethod(double**, double**,int);
 

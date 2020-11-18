@@ -8,9 +8,23 @@ eps = 0.01
 QR
 Number of iterations: 33
 Eigenvalues: 4.01134      2.9871       2.00425      0.997313     
+
 QR with shifts
 Number of iterations: 12
 Eigenvalues: 0.997318     4.01141      2.00435      2.98692      
+
+Hessenberg decomposition:
+
+1.5          0.864523     0            0            
+0.864523     2.48436      0.0183304    0            
+0            0.0183304    2.9018       0.997857     
+0            0            0.997857     3.11384      
+
 QR (Hessenberg form)
 Number of iterations: 33
 Eigenvalues: 4.01134      2.9871       2.00425      0.997313     
+
+QR with shifts (Hessenberg form)
+Number of iterations: 23
+Eigenvalues: 0.997314     4.01142      2.00431      2.98696      
+

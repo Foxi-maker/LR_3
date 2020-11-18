@@ -45,13 +45,24 @@ void FUN::MultMatrix(double** a, double** b, int n)
 	delete[](c);
 }
 
-bool FUN::StopCondition(double ** a, int n)
+bool FUN::StopCondition(double ** a, int n, std::string flag)
 {
 	double max = 0;
-	for (int i = 1; i < n; i++)
-		for (int j = 0; j < i; j++)
-			if (fabs(a[i][j]) > max)
-				max = fabs(a[i][j]);
+
+	if (flag == "HF")
+	{
+		for (int i = 1; i < n; i++)
+			if (fabs(a[i][i - 1]) > max)
+				max = fabs(a[i][i - 1]);
+	}
+	else
+	{
+		for (int i = 1; i < n; i++)
+			for (int j = 0; j < i; j++)
+				if (fabs(a[i][j]) > max)
+					max = fabs(a[i][j]);
+	}
+
 
 	if (max < eps)
 		return true;
@@ -59,12 +70,19 @@ bool FUN::StopCondition(double ** a, int n)
 		return false;
 }
 
-bool FUN::StopConditionHF(double ** a, int n)
+bool FUN::ConditionShifts(double** a, int n, std::string flag)
 {
 	double max = 0;
-	for (int i = 1; i < n; i++)
-		if (fabs(a[i][i - 1]) > max)
-			max = fabs(a[i][i - 1]);
+	if (flag == "HF")
+	{
+		max = a[n - 1][n - 2];
+	}
+	else
+	{
+		for (int i = 0; i < n - 1; i++)
+			if (fabs(a[n - 1][i]) > max)
+				max = fabs(a[n - 1][i]);
+	}
 
 	if (max < eps)
 		return true;

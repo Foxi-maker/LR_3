@@ -91,14 +91,51 @@ void Matrix::OutToFile(const std::string& str, const double* x)const
 	stream << "\n";
 }
 
+void Matrix::OutToFile(const std::string& str, double** matrix)const
+{
+	stream << str << "\n";
+	for (int i = 0; i < matrixSize; ++i)
+	{
+		for (int j = 0; j < matrixSize; j++)
+		{
+			stream << std::setw(12) << std::left << matrix[i][j] << " ";
+		}
+		stream << "\n";
+	}
+	stream << "\n";
+}
+
 void Matrix::OutToFile(const std::string& str, double num)const
 {
 	stream << str << num << "\n";
 }
 
-
-void Matrix::QR_EigVal(std::string flag = "SF")
+void Matrix::HesFormOut() const
 {
+	double** R = new double*[matrixSize];
+	for (int i = 0; i < matrixSize; i++)
+		R[i] = new double[matrixSize];
+
+	for (int i = 0; i < matrixSize; ++i)
+		for (int j = 0; j < matrixSize; j++)
+			R[i][j] = A[i][j];
+
+	FUN::HesForm(R, matrixSize);
+
+	OutToFile("Hessenberg decomposition:", R);
+
+	//FUN::Show(R, matrixSize);
+
+	for (int i = 0; i < matrixSize; i++)
+	{
+		delete[](R[i]);
+	}
+	delete[](R);
+}
+
+void Matrix::QR_EigVal(std::string flag)
+{
+	int operations = 0;
 	double** R = new double*[matrixSize];
 	for (int i = 0; i < matrixSize; i++)
 		R[i] = new double[matrixSize];
@@ -113,17 +150,20 @@ void Matrix::QR_EigVal(std::string flag = "SF")
 
 	if (flag == "HF")
 	{
-		FUN::HesForm(R, matrixSize);
 		OutToFile("QR (Hessenberg form)\n");
+		FUN::HesForm(R, matrixSize);
+		//
+		operations += ;
+		
 	}
 	else
 	{
 		OutToFile("QR\n");
 	}
-		
+
 
 	int numIter = 0;
-	while (!FUN::StopCondition(R, matrixSize,flag))
+	while (!FUN::StopCondition(R, matrixSize, flag))
 	{
 		numIter++;
 
@@ -156,7 +196,7 @@ void Matrix::QR_EigVal(std::string flag = "SF")
 	delete[](eigval);
 }
 
-void Matrix::QR_EigVal_shifts(std::string flag = "SF")
+void Matrix::QR_EigVal_shifts(std::string flag)
 {
 	double sigma = A[matrixSize - 1][matrixSize - 1];
 
@@ -166,34 +206,34 @@ void Matrix::QR_EigVal_shifts(std::string flag = "SF")
 
 	for (int i = 0; i < matrixSize; ++i)
 		for (int j = 0; j < matrixSize; j++)
-			if (i == j)
-				R[i][j] = A[i][j] - sigma;
-			else
-				R[i][j] = A[i][j];
+			R[i][j] = A[i][j];
 
 	double** Q = new double*[matrixSize];
 	for (int i = 0; i < matrixSize; i++)
 		Q[i] = new double[matrixSize];
 
+	if (flag == "HF")
+	{
+		FUN::HesForm(R, matrixSize);
+		OutToFile("QR with shifts (Hessenberg form)\n");
+	}
+	else
+	{
+		OutToFile("QR with shifts\n");
+	}
+
+	for (int j = 0; j < matrixSize; j++)
+		R[j][j] -= sigma;
+
 	int numIter = 0;
 	int dynamicSize = matrixSize;
-	//int eigIndex = 0;
 
 	while (dynamicSize > 1)
 	{
-		double max;
-		max = 0;
-		for (int i = 0; i < dynamicSize - 1; i++)
-			if (fabs(R[dynamicSize - 1][i]) > max)
-				max = fabs(R[dynamicSize - 1][i]);
-
-		if (max < eps)
+		if (FUN::ConditionShifts(R, dynamicSize, flag))
 		{
 			for (int i = 0; i < dynamicSize; i++)
 				R[i][i] += sigma;
-
-			//std::cout << "A:\n";
-			//FUN::Show(R, dynamicSize);
 
 			dynamicSize--;
 
@@ -212,9 +252,7 @@ void Matrix::QR_EigVal_shifts(std::string flag = "SF")
 			//результат умножения записывается в матрицу R
 			FUN::MultMatrix(R, Q, dynamicSize);
 		}
-
 		numIter++;
-		//std::cout << "numIter: " << numIter << "\n";
 	}
 	double* eigval = new double[matrixSize];
 
@@ -222,7 +260,6 @@ void Matrix::QR_EigVal_shifts(std::string flag = "SF")
 		eigval[i] = R[i][i];
 
 	//Вывод в файл числа итераций и собственных чисел
-	OutToFile("QR with shifts\n");
 	OutToFile("Number of iterations: ", numIter);
 	OutToFile("Eigenvalues: ", eigval);
 	OutToFile("\n");
@@ -235,61 +272,6 @@ void Matrix::QR_EigVal_shifts(std::string flag = "SF")
 	delete[](Q);
 	delete[](R);
 	delete[](eigval);
-}
-
-void Matrix::QR_EigVal_HF()
-{
-	double** R = new double*[matrixSize];
-	for (int i = 0; i < matrixSize; i++)
-		R[i] = new double[matrixSize];
-
-	for (int i = 0; i < matrixSize; ++i)
-		for (int j = 0; j < matrixSize; j++)
-			R[i][j] = A[i][j];
-
-	double** Q = new double*[matrixSize];
-	for (int i = 0; i < matrixSize; i++)
-		Q[i] = new double[matrixSize];
-
-	/*std::cout << "Hes form\n";
-	FUN::Show(R, matrixSize);*/
-
-	int numIter = 0;
-	while (!FUN::StopConditionHF(R, matrixSize))
-	{
-		numIter++;
-
-		QRMethod(Q, R, matrixSize);
-
-		//результат умножения записывается в матрицу R
-		FUN::MultMatrix(R, Q, matrixSize);
-
-		//std::cout << "A:\n";
-		//FUN::Show(R, matrixSize);
-
-	}
-	double* eigval = new double[matrixSize];
-
-	for (int i = 0; i < matrixSize; i++)
-		eigval[i] = R[i][i];
-
-	//Вывод в файл числа итераций и собственных чисел
-
-	OutToFile("Number of iterations: ", numIter);
-	OutToFile("Eigenvalues: ", eigval);
-	OutToFile("\n");
-
-	for (int i = 0; i < matrixSize; i++)
-	{
-		delete[](R[i]);
-		delete[](Q[i]);
-	}
-	delete[](Q);
-	delete[](R);
-}
-
-void Matrix::QR_EigVal_HF_shifts()
-{
 }
 
 void Matrix::QRMethod(double** Q, double** R, int n)

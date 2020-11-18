@@ -6,9 +6,9 @@ namespace FUN
 
 	void MultMatrix(double**, double**, int);
 
-	bool StopCondition(double**, int);
+	bool StopCondition(double**, int, std::string = "SF");
 
-	bool StopConditionHF(double **, int);
+	bool ConditionShifts(double**, int, std::string = "SF");
 
 	void HesForm(double**, int);
 }

@@ -17,7 +17,9 @@ int main()
 
 		elem.QR_EigVal();
 		elem.QR_EigVal_shifts();
-		elem.QR_EigVal_HF();
+		elem.HesFormOut();
+		elem.QR_EigVal("HF");
+		elem.QR_EigVal_shifts("HF");
 
 		elem.OutStreamClose();
 
