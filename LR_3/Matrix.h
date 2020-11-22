@@ -30,6 +30,8 @@ public:
 	void ReverseIterations();
 	void QRforSLAE(double**, double**, int);
 
+	void RI_Rayleigh();
+
 	void QRMethod(double**, double**,int);
 
 	~Matrix();

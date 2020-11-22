@@ -15,13 +15,14 @@ int main()
 
 		elem.OutToFile();
 
-		//elem.QR_EigVal();
+		elem.QR_EigVal();
 		elem.QR_EigVal_shifts();
 		elem.HesFormOut();
-		//elem.QR_EigVal("HF");
+		elem.QR_EigVal("HF");
 		elem.QR_EigVal_shifts("HF");
 
 		elem.ReverseIterations();
+		elem.RI_Rayleigh();
 
 		elem.OutStreamClose();
 

@@ -260,7 +260,7 @@ void Matrix::QR_EigVal_shifts(std::string flag)
 			//std::cout << "A:\n";
 			//FUN::Show(R, dynamicSize);
 
-			//numIter++;
+			numIter++;
 			//std::cout << "numIter: " << numIter << "\n";
 		}
 
@@ -396,10 +396,9 @@ void Matrix::ReverseIterations()
 			for (int i = 0; i < matrixSize; i++)
 				dif[i] = fabs(x[index][i]) - fabs(x_K[i]);
 
-			FUN::Show(x, matrixSize);
 			for (int i = 0; i < matrixSize; i++)
 				x_K[i] = x[index][i];
-			std::cout << "FUN::NormInf(dif, matrixSize): " << FUN::NormInf(dif, matrixSize) << "\n";
+
 		}while (FUN::NormInf(dif, matrixSize) > eps);
 
 		stream << index + 1 <<" eigenvector: ";
@@ -459,6 +458,107 @@ void Matrix::QRforSLAE(double** A, double** e, int k)
 		}
 		e[k][columIterator] /= A[columIterator][columIterator];
 	}
+}
+
+void Matrix::RI_Rayleigh()
+{
+	OutToFile("Reverse iterations with Rayleigh iteration\n");
+
+	double** x = new double*[matrixSize];
+	for (int i = 0; i < matrixSize; i++)
+		x[i] = new double[matrixSize];
+
+	for (int i = 0; i < matrixSize; ++i)
+		for (int j = 0; j < matrixSize; j++)
+			if (i == j)
+				x[i][j] = 1.;
+			else
+				x[i][j] = 0.;
+
+	double** B = new double*[matrixSize];
+	for (int i = 0; i < matrixSize; i++)
+		B[i] = new double[matrixSize];
+
+	double* x_K = new double[matrixSize];
+	double* dif = new double[matrixSize];
+
+	//Начальное приближение
+
+	int numIter;
+
+	for (int index = 0; index < matrixSize; index++)
+	{
+		numIter = 0;
+
+		eigval[index] = 0.;
+		double temp;
+		//do
+		//{
+			for (int i = 0; i < matrixSize; ++i)
+			{
+				temp = 0.;
+				for (int j = 0; j < matrixSize; j++)
+				{
+					temp += A[i][j] * x[index][i];
+					//eigval[index] += A[i][j] * x[index][i];
+				}
+				eigval[index] += temp * x[index][i];
+			}
+
+		//}while()
+		
+
+		for (int i = 0; i < matrixSize; ++i)
+		{
+			x_K[i] = 0.;
+
+			for (int j = 0; j < matrixSize; j++)
+				if (i == j)
+					B[i][j] = A[i][j] - eigval[index];
+				else
+					B[i][j] = A[i][j];
+		}
+
+
+		do {
+			QRforSLAE(B, x, index);
+
+			//Нормировка ||*||_2
+			double Norm_x = 0.;
+			for (int i = 0; i < matrixSize; ++i)
+				Norm_x += x[index][i] * x[index][i];
+
+			Norm_x = std::sqrt(Norm_x);
+
+			for (int i = 0; i < matrixSize; ++i)
+				x[index][i] /= Norm_x;
+
+			numIter++;
+
+			for (int i = 0; i < matrixSize; i++)
+				dif[i] = fabs(x[index][i]) - fabs(x_K[i]);
+
+			for (int i = 0; i < matrixSize; i++)
+				x_K[i] = x[index][i];
+
+		} while (FUN::NormInf(dif, matrixSize) > eps);
+
+		stream << index + 1 << " eigenvector: ";
+		OutToFile("", x[index]);
+		OutToFile("Number of iterations: ", numIter);
+	}
+	OutToFile("Eigenvalues: ", eigval);
+	OutToFile("\n");
+
+	for (int i = 0; i < matrixSize; i++)
+	{
+		delete[](x[i]);
+		delete[](B[i]);
+	}
+	delete[](x);
+	delete[](B);
+	delete[](x_K);
+	delete[](dif);
 }
 
 Matrix::~Matrix()

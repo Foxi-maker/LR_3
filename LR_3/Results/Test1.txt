@@ -7,12 +7,12 @@ eps = 0.01
 
 QR
 Number of iterations: 33
-Number of spins: 2310
+Number of spins + multiplications: 2310
 Eigenvalues: 4.01134      2.9871       2.00425      0.997313     
 
 QR with shifts
-Number of iterations: 12
-Number of spins: 630
+Number of iterations: 9
+Number of spins + multiplications: 630
 Eigenvalues: 0.997318     4.01141      2.00435      2.98692      
 
 Hessenberg decomposition:
@@ -23,11 +23,32 @@ Hessenberg decomposition:
 
 QR (Hessenberg form)
 Number of iterations: 33
-Number of spins: 2316
+Number of spins + multiplications: 2316
 Eigenvalues: 4.01134      2.9871       2.00425      0.997313     
 
 QR with shifts (Hessenberg form)
-Number of iterations: 23
-Number of spins: 1406
-Eigenvalues: 0.997314     4.01142      2.00431      2.98696      
+Number of iterations: 7
+Number of spins + multiplications: 414
+Eigenvalues: 0.997314     2.00426      4.0114       2.98702      
+
+Reverse iterations
+1 eigenvector: 0.864461     0.00338918   0.244595     0.439169     
+Number of iterations: 2
+2 eigenvector: 0.0119069    -0.709768    0.607558     -0.356315    
+Number of iterations: 2
+3 eigenvector: 0.00341777   -0.704246    -0.620786    0.344458     
+Number of iterations: 2
+4 eigenvector: -0.502546    -0.0157961   0.430894     0.749352     
+Number of iterations: 2
+
+Reverse iterations with Rayleigh iteration
+1 eigenvector: 0.991685     -0.0391297   0.0871607    0.0862148    
+Number of iterations: 8
+2 eigenvector: -0.396172    -0.123862    0.202626     0.886932     
+Number of iterations: 18
+3 eigenvector: -0.46519     -0.0270986   0.370385     0.803542     
+Number of iterations: 4
+4 eigenvector: -0.784438    -0.0588867   -0.232189    -0.572082    
+Number of iterations: 7
+Eigenvalues: 0.32         3.37         3.12         1.13         
 
